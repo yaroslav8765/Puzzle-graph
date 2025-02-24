@@ -79,7 +79,7 @@ void print_adjacency_list(const vector < vector <int> > &graph) {
     }
 }
 
-void dfs(vector < vector<int> > &graph, int v, vector<int>& dp, vector<int>& parent) {
+/*void dfs(vector < vector<int> > &graph, int v, vector<int>& dp, vector<int>& parent,vector < vector<int> > &longest_path) {
     if (dp[v] != -1) {
         return;  // Если длина пути для вершины уже посчитана, возвращаемся
     }
@@ -93,11 +93,38 @@ void dfs(vector < vector<int> > &graph, int v, vector<int>& dp, vector<int>& par
 
         // После возврата из рекурсии, обновляем длину пути
         if (dp[v] < 1 + dp[to]) {
-                    dp[v] = 1 + dp[to];
-                    parent[v] = to;  // Запоминаем следующую вершину для продолжения пути
-                }
+         dp[v] = 1 + dp[to];
+         parent[v] = to;  // Запоминаем следующую вершину для продолжения пути
+        }
+    }
+}*/
+
+void dfs(vector < vector<int> > &graph, int v, vector<int>& dp, vector<int>& parent, vector < vector<int> > &longest_path) {
+    if (dp[v] != -1) {
+        return;  // Если длина пути для вершины уже посчитана, возвращаемся
+    }
+
+    dp[v] = 1;  // Минимальная длина пути из вершины v - это сама вершина
+    longest_path[v].clear();
+    longest_path[v].push_back(v);
+
+    // Рекурсивно проверяем всех соседей
+    for (int i = 0; i < graph[v].size(); i++) {
+        int to = graph[v][i];
+        dfs(graph, to, dp, parent, longest_path);  // Рекурсивный вызов DFS для соседа
+
+        // После возврата из рекурсии, обновляем длину пути
+        if (dp[v] < 1 + dp[to]) {
+            dp[v] = 1 + dp[to];
+            parent[v] = to;
+
+            // Обновляем путь
+            longest_path[v] = longest_path[to];
+            longest_path[v].insert(longest_path[v].begin(), v);
+        }
     }
 }
+
 
 void initialize_dp(vector<int>& dp, int count) {
     dp.resize(count, -1);  // Инициализируем вектор размером count и заполняем его значением -1
@@ -114,11 +141,12 @@ void print_path(const vector<int>& path) {
 
 void get_longest_path(vector < vector<int> > &Adjacency_list, int count, vector<int> &path){
 ////////////////////////////
+    vector < vector<int> > longest_path(MAX_PUZZLES_AMOUNT);
     vector<int> dp(count, -1);
     vector<int> parent(count, -1);
     for (int i = 0; i < count; i++) {
         if (dp[i] == -1) {
-            dfs(Adjacency_list, i, dp, parent);
+            dfs(Adjacency_list, i, dp, parent,longest_path);
         }
     }
     ////////////////////////////
@@ -143,6 +171,10 @@ void get_longest_path(vector < vector<int> > &Adjacency_list, int count, vector<
         i++;
     }
     print_path(path);
+    for(int q = 0; q < max_path_length; q++){
+        cout<<longest_path[max_path_index][q]<<" ";
+    }
+    cout<<"\n";
     //there is no last (84) puzzle
 }
 
@@ -181,7 +213,7 @@ int main()
         connect_puzzle(&final_puzzle, Puzzle[path[i]]);
     }
 
-    connect_puzzle(&final_puzzle, Puzzle[84]); // add 84 manualy
+//    connect_puzzle(&final_puzzle, Puzzle[84]); // add 84 manualy
     cout << "Final puzzle:" << final_puzzle.get_first_part() << "/" << final_puzzle.get_central_part() << "/" << final_puzzle.get_last_part() << "\n";
     cin >> input;
 
