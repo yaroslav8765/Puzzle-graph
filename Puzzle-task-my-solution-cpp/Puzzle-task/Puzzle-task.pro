@@ -16,7 +16,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    puzzleobject.cpp
+    puzzleobject.cpp \
+    grapg.cpp
 
 HEADERS += \
-    puzzleobject.h
+    puzzleobject.h \
+    grapg.h

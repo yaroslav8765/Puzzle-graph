@@ -8,6 +8,12 @@ int stoi(const string& str) {
     return result;
 }
 
+string to_string(int value) {
+    stringstream ss;
+    ss << value;
+    return ss.str();
+}
+
 //*************************//
 
 

@@ -6,7 +6,7 @@
 #include <sstream>
 
 using namespace std;
-
+string to_string(int value);
 class PuzzleObject{
 protected:
     string stored_num;
